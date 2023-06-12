@@ -197,11 +197,12 @@ exports.rating = asyncHandler(async (req, res) => {
 });
 
 exports.uploadImages = asyncHandler(async (req, res) => {
+
   try {
     const uploader = (path, folder) => cloudinaryUploadImage(path, folder);
     const urls = [];
     const files = req.files;
-    console.log(files);
+
     for (let i = 0; i < files.length; i++) {
       const { path } = files[i];
       const newpath = await uploader(path, "Products");

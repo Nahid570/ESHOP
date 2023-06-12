@@ -1,22 +1,21 @@
 const sharp = require("sharp");
 const multer = require("multer");
 const path = require("path");
-const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    console.log(file);
     let destinationPath = path.join(__dirname, "../public/images");
-    if (file.fieldname === "images") {
+    if (file.fieldname === "prodimages") {
       destinationPath = path.join(destinationPath, "products");
-    } else if (file.fieldname === "blogimage") {
+    } 
+    else if (file.fieldname === "blogimage") {
       destinationPath = path.join(destinationPath, "blogs");
     }
     cb(null, destinationPath);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + "-" + uniqueSuffix + ".jpeg");
+    cb(null, file.fieldname + "-" + uniqueSuffix + ".jpg");
   },
 });
 
@@ -31,7 +30,7 @@ const multerFilter = (req, file, cb) => {
 const uploadPhoto = multer({
   storage,
   fileFilter: multerFilter,
-  limits: 5000,
+  limits: 10 * 1024 * 1024,
 });
 
 // not working, I've to fix that
@@ -41,9 +40,9 @@ const productImgResize = async (req, res, next) => {
     req.files.map(async (file) => {
       await sharp(file.path)
         .resize(300, 300)
-        .toFormat("jpeg")
+        .toFormat("jpg")
         .jpeg({ quality: 90 });
-      // .toFile(path.join(`public/images/products/${file.fieldname}`));
+      //   .toFile(`public/images/products/${file.filename}`);
       // fs.unlinkSync(file.path);
     })
   );
@@ -56,7 +55,7 @@ const blogImgResize = async (req, res, next) => {
     req.files.map(async (file) => {
       await sharp(file.path)
         .resize(300, 300)
-        .toFormat("jpeg")
+        .toFormat("jpg")
         .jpeg({ quality: 90 });
       //   .toFile(`public/images/products/${file.filename}`);
       // fs.unlinkSync(file.path);
