@@ -8,6 +8,7 @@ const {
   addToWishList,
   rating,
   uploadImages,
+  deleteImages,
 } = require("../controllers/productCtrl");
 const { isAdmin, authMiddleware } = require("../middlewares/authMiddleware");
 const {
@@ -18,7 +19,7 @@ const router = express.Router();
 
 // image upload
 router.put(
-  "/upload/:id",
+  "/upload",
   authMiddleware,
   isAdmin,
   uploadPhoto.array("images", 5),
@@ -33,5 +34,6 @@ router.put("/rating", authMiddleware, rating);
 
 router.put("/:id", authMiddleware, isAdmin, updateProduct);
 router.delete("/:id", authMiddleware, isAdmin, deleteProduct);
+router.delete("/deleted-img/:id", authMiddleware, isAdmin, deleteImages);
 
 module.exports = router;
