@@ -23,6 +23,10 @@ const PORT = process.env.PORT || 4000;
 // DB Connection
 dbConnect();
 
+app.use("/", (req, res) => {
+  res.json("Working!!!!!!!!");
+});
+
 // Routes
 app.use("/api/user", authRouter);
 app.use("/api/product", productRoute);
